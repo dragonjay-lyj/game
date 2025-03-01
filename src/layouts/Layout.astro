@@ -1,22 +1,251 @@
-<!doctype html>
-<html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro Basics</title>
-	</head>
-	<body>
-		<slot />
-	</body>
-</html>
+---
+// Layout.astro
+import { ViewTransitions } from 'astro:transitions';
+import "../styles/global.css";
 
-<style>
-	html,
-	body {
-		margin: 0;
-		width: 100%;
-		height: 100%;
-	}
-</style>
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  ogType?: string;
+}
+
+const { 
+  title = "Game Library - Download Your Favorite Games",
+  description = "Discover and download the latest PC games with our extensive game library.",
+  image = "/images/og-image.jpg",
+  ogType = "website"
+} = Astro.props;
+
+// Get current path for active navigation highlighting
+const currentPath = Astro.url.pathname;
+---
+
+<!doctype html>
+<html lang="zh-CN" class="scroll-smooth dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    
+    <!-- Primary Meta Tags -->
+    <title>{title}</title>
+    <meta name="title" content={title} />
+    <meta name="description" content={description} />
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content={ogType} />
+    <meta property="og:url" content={Astro.url} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={new URL(image, Astro.url)} />
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content={Astro.url} />
+    <meta property="twitter:title" content={title} />
+    <meta property="twitter:description" content={description} />
+    <meta property="twitter:image" content={new URL(image, Astro.url)} />
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- View Transitions for page animations -->
+    <ViewTransitions />
+    
+    <!-- Theme color for browser UI -->
+    <meta name="theme-color" content="#0070F3" />
+    
+    <!-- Preload critical assets -->
+    <link rel="preload" href="/images/hero-bg.webp" as="image" />
+  </head>
+  <body class="min-h-screen bg-background font-sans antialiased selection:bg-primary/20 selection:text-primary">
+    
+    <!-- Skip to content link for accessibility -->
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-primary focus:text-white focus:rounded">
+      Skip to content
+    </a>
+    
+    <!-- Header with glass effect -->
+    <header class="sticky top-0 z-40 w-full backdrop-blur-md bg-background/80 border-b border-divider transition-all duration-300">
+      <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex h-16 items-center justify-between">
+          <!-- Logo -->
+          <a href="/" class="flex items-center space-x-2 transition-transform duration-300 hover:scale-105">
+            <div class="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-tr from-primary to-secondary">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" viewBox="0 0 20 20" fill="currentColor">
+                <path d="M11 17a1 1 0 001.447.894l4-2A1 1 0 0017 15V9.236a1 1 0 00-1.447-.894l-4 2a1 1 0 00-.553.894V17zM15.211 6.276a1 1 0 000-1.788l-4.764-2.382a1 1 0 00-.894 0L4.789 4.488a1 1 0 000 1.788l4.764 2.382a1 1 0 00.894 0l4.764-2.382zM4.447 8.342A1 1 0 003 9.236V15a1 1 0 00.553.894l4 2A1 1 0 009 17v-5.764a1 1 0 00-.553-.894l-4-2z" />
+              </svg>
+            </div>
+            <span class="font-bold text-foreground">GameVault</span>
+          </a>
+          
+          <!-- Navigation -->
+          <nav class="hidden md:flex items-center space-x-6">
+            <a href="/" class={`text-sm font-medium transition-colors hover:text-primary ${currentPath === '/' ? 'text-primary' : 'text-foreground/80'}`}>
+              Home
+            </a>
+          </nav>
+        </div>
+      </div>
+      
+      <!-- Mobile menu (hidden by default) -->
+      <div id="mobile-menu" class="hidden md:hidden border-t border-divider">
+        <div class="container mx-auto px-4 py-4 space-y-4">
+          <a href="/" class={`block text-sm font-medium transition-colors hover:text-primary ${currentPath === '/' ? 'text-primary' : 'text-foreground/80'}`}>
+            Home
+          </a>
+          <a href="/games" class={`block text-sm font-medium transition-colors hover:text-primary ${currentPath.startsWith('/games') ? 'text-primary' : 'text-foreground/80'}`}>
+            Games
+          </a>
+          <a href="/categories" class={`block text-sm font-medium transition-colors hover:text-primary ${currentPath.startsWith('/categories') ? 'text-primary' : 'text-foreground/80'}`}>
+            Categories
+          </a>
+          <a href="/about" class={`block text-sm font-medium transition-colors hover:text-primary ${currentPath.startsWith('/about') ? 'text-primary' : 'text-foreground/80'}`}>
+            About
+          </a>
+        </div>
+      </div>
+    </header>
+    
+    <!-- Search overlay (hidden by default) -->
+    <div id="search-overlay" class="fixed inset-0 z-50 hidden bg-background/80 backdrop-blur-sm">
+      <div class="container mx-auto px-4 h-full flex items-center justify-center">
+        <div class="w-full max-w-2xl bg-background border border-divider rounded-xl shadow-2xl p-6 transform transition-all scale-95 opacity-0" id="search-container">
+          <div class="flex items-center justify-between mb-4">
+            <h2 class="text-xl font-bold">Search Games</h2>
+            <button id="close-search" class="rounded-full p-1 text-foreground/80 hover:bg-foreground/10 transition-colors">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+              </svg>
+            </button>
+          </div>
+          <div class="relative">
+            <input 
+              type="text" 
+              id="search-input" 
+              placeholder="Search for games..." 
+              class="w-full px-4 py-3 rounded-lg bg-content1 border-none focus:outline-none focus:ring-2 focus:ring-primary"
+            />
+            <div class="absolute right-3 top-3 text-foreground/60">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
+              </svg>
+            </div>
+          </div>
+          <div class="mt-6 max-h-[60vh] overflow-y-auto" id="search-results">
+            <!-- Search results will be populated here -->
+            <div class="text-center text-foreground/60 py-8">
+              Start typing to search...
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Main content -->
+    <main id="main-content" class="flex-1">
+      <slot />
+    </main>
+    
+    <!-- Footer -->
+    <footer class="bg-content1 border-t border-divider">
+      <div class="container mx-auto px-4 py-12">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+          <div>
+            <div class="flex items-center space-x-2 mb-4">
+              <div class="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-tr from-primary to-secondary">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" viewBox="0 0 20 20" fill="currentColor">
+                  <path d="M11 17a1 1 0 001.447.894l4-2A1 1 0 0017 15V9.236a1 1 0 00-1.447-.894l-4 2a1 1 0 00-.553.894V17zM15.211 6.276a1 1 0 000-1.788l-4.764-2.382a1 1 0 00-.894 0L4.789 4.488a1 1 0 000 1.788l4.764 2.382a1 1 0 00.894 0l4.764-2.382zM4.447 8.342A1 1 0 003 9.236V15a1 1 0 00.553.894l4 2A1 1 0 009 17v-5.764a1 1 0 00-.553-.894l-4-2z" />
+                </svg>
+              </div>
+              <span class="font-bold text-foreground">GameVault</span>
+            </div>
+            <p class="text-sm text-foreground/70 mb-4">
+              Your ultimate destination for game downloads. Discover, download, and play the latest games.
+            </p>
+            <div class="flex space-x-4">
+              <a href="#" class="text-foreground/70 hover:text-primary transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                </svg>
+              </a>
+              <a href="#" class="text-foreground/70 hover:text-primary transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723 10.054 10.054 0 01-3.127 1.184 4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/>
+                </svg>
+              </a>
+              <a href="#" class="text-foreground/70 hover:text-primary transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/>
+                </svg>
+              </a>
+              <a href="#" class="text-foreground/70 hover:text-primary transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/>
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+        
+        <div class="mt-12 pt-8 border-t border-divider text-center">
+          <p class="text-sm text-foreground/60">
+            &copy; {new Date().getFullYear()} GameVault. All rights reserved.
+          </p>
+        </div>
+      </div>
+    </footer>
+    
+    <!-- Back to top button -->
+    <button 
+      id="back-to-top" 
+      class="fixed bottom-6 right-6 p-3 rounded-full bg-primary text-white shadow-lg z-40 opacity-0 translate-y-10 transition-all duration-300 hover:bg-primary/90"
+      aria-label="Back to top"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+        <path fill-rule="evenodd" d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z" clip-rule="evenodd" />
+      </svg>
+    </button>
+    
+    <!-- Toast notification container -->
+    <div id="toast-container" class="fixed bottom-6 left-6 z-50 flex flex-col gap-2"></div>
+    
+    <!-- JavaScript for interactive elements -->
+    <script>
+      // DOM Elements
+      const mobileMenuButton = document.getElementById('mobile-menu-button');
+      const mobileMenu = document.getElementById('mobile-menu');
+      const backToTop = document.getElementById('back-to-top');
+      
+      // Mobile menu toggle
+      if (mobileMenuButton && mobileMenu) {
+        mobileMenuButton.addEventListener('click', () => {
+          mobileMenu.classList.toggle('hidden');
+        });
+      }
+      
+      // Back to top button
+      if (backToTop) {
+        window.addEventListener('scroll', () => {
+          if (window.scrollY > 300) {
+            backToTop.classList.remove('opacity-0', 'translate-y-10');
+          } else {
+            backToTop.classList.add('opacity-0', 'translate-y-10');
+          }
+        });
+        
+        backToTop.addEventListener('click', () => {
+          window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+          });
+        });
+      }
+    
+    </script>
+  </body>
+</html>

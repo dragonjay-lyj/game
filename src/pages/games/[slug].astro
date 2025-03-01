@@ -1,0 +1,174 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import GameDetailPage from "../../components/GameDetailPage";
+import { getCollection, getEntry } from "astro:content";
+
+// 获取当前slug
+const { slug } = Astro.params;
+
+// 尝试获取游戏数据
+let game;
+let errorMessage;
+
+try {
+  if (slug) {
+    // 首先尝试直接获取
+    game = await getEntry('games', slug);
+    
+    // 如果没有找到，尝试获取所有游戏并查找匹配项
+    if (!game) {
+      const allGames = await getCollection('games');
+      console.log("Available games:", allGames.map(g => g.slug));
+      game = allGames.find(g => g.slug === slug);
+    }
+  }
+} catch (error) {
+  console.error(`Error loading game with slug "${slug}":`, error);
+  errorMessage = '未找到';
+}
+
+// 如果找不到游戏，重定向到404页面
+if (!game) {
+  return Astro.redirect('/404');
+}
+
+// 准备SEO元数据
+const title = `${game.data.title} - Download and Play`;
+const description = game.data.description ? 
+  game.data.description.replace(/<[^>]*>?/gm, '').substring(0, 160) : 
+  `Download ${game.data.title} for PC - Latest version with all updates.`;
+const ogImage = game.data.coverImage;
+
+// 构建面包屑数据
+const breadcrumbs = [
+  { name: "Home", href: "/" },
+  { name: "Games", href: "/games" },
+  ...(game.data.genres && game.data.genres[0] ? 
+    [{ name: game.data.genres[0], href: `/genres/${game.data.genres[0].toLowerCase().replace(/\s+/g, '-')}` }] : 
+    []),
+  { name: game.data.title, href: `/games/${slug}`, current: true }
+];
+---
+
+<Layout 
+  title={title}
+  description={description}
+  image={ogImage}
+  ogType="article"
+>
+  <div class="min-h-screen">
+    <!-- 游戏详情页面的加载状态 -->
+    
+    <!-- 游戏详情组件 -->
+      <!-- 自定义面包屑导航 -->
+      <nav class="bg-background/80 backdrop-blur-md border-b border-divider">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="flex items-center h-12 space-x-2 overflow-x-auto whitespace-nowrap scrollbar-hide">
+            {breadcrumbs.map((item, index) => (
+              <>
+                <a 
+                  href={item.href}
+                  class={`text-sm ${item.current ? 'font-medium text-primary' : 'text-foreground/70 hover:text-primary'} transition-colors`}
+                >
+                  {item.name}
+                </a>
+                {index < breadcrumbs.length - 1 && (
+                  <span class="text-foreground/40">/</span>
+                )}
+              </>
+            ))}
+          </div>
+        </div>
+      </nav>
+      
+      <!-- 游戏详情React组件 -->
+      <GameDetailPage game={game} client:visible />
+      
+      <!-- 返回顶部按钮 -->
+      <button 
+        id="back-to-top" 
+        class="fixed bottom-6 right-6 p-3 rounded-full bg-primary text-white shadow-lg z-40 opacity-0 translate-y-10 transition-all duration-300 hover:bg-primary/90"
+        aria-label="Back to top"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z" clip-rule="evenodd" />
+        </svg>
+      </button>
+  </div>
+</Layout>
+
+<style>
+  /* 滚动条隐藏 */
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  /* 相关游戏动画 */
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style>
+
+<script>
+  // 页面加载动画
+  document.addEventListener('DOMContentLoaded', () => {
+    const pageLoader = document.getElementById('page-loader');
+    const gameContent = document.getElementById('game-content');
+    const backToTop = document.getElementById('back-to-top');
+    
+    // 模拟加载时间，实际应用中可以根据内容加载状态来控制
+    setTimeout(() => {
+      if (pageLoader && gameContent) {
+        pageLoader.style.opacity = '0';
+        gameContent.style.opacity = '1';
+        
+        setTimeout(() => {
+          pageLoader.style.display = 'none';
+        }, 500);
+      }
+    }, 800);
+    
+    // 返回顶部按钮
+    if (backToTop) {
+      window.addEventListener('scroll', () => {
+        if (window.scrollY > 300) {
+          backToTop.classList.remove('opacity-0', 'translate-y-10');
+        } else {
+          backToTop.classList.add('opacity-0', 'translate-y-10');
+        }
+      });
+      
+      backToTop.addEventListener('click', () => {
+        window.scrollTo({
+          top: 0,
+          behavior: 'smooth'
+        });
+      });
+    }
+    
+    // 相关游戏动画观察器
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.animation = entry.target.getAttribute('style');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1 });
+    
+    document.querySelectorAll('[data-related-game]').forEach(el => {
+      observer.observe(el);
+    });
+  });
+</script>
