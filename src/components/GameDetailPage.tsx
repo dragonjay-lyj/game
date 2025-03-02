@@ -833,7 +833,7 @@ export const GameDetailPage: React.FC<GameDetailPageProps> = ({ game }) => {
           </CardBody>
           
           <CardFooter className="flex flex-col items-start gap-2 px-6 pb-6">
-            <TwikooComments envId="https://superlative-valkyrie-233b02.netlify.app/.netlify/functions/twikoo" />
+            <TwikooComments envId="https://superlative-valkyrie-233b02.netlify.app/.netlify/functions/twikoo" path={`/games/${game.slug}`} />
           </CardFooter>
         </Card>
       </div>
