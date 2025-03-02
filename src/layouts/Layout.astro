@@ -98,53 +98,9 @@ const currentPath = Astro.url.pathname;
           <a href="/" class={`block text-sm font-medium transition-colors hover:text-primary ${currentPath === '/' ? 'text-primary' : 'text-foreground/80'}`}>
             Home
           </a>
-          <a href="/games" class={`block text-sm font-medium transition-colors hover:text-primary ${currentPath.startsWith('/games') ? 'text-primary' : 'text-foreground/80'}`}>
-            Games
-          </a>
-          <a href="/categories" class={`block text-sm font-medium transition-colors hover:text-primary ${currentPath.startsWith('/categories') ? 'text-primary' : 'text-foreground/80'}`}>
-            Categories
-          </a>
-          <a href="/about" class={`block text-sm font-medium transition-colors hover:text-primary ${currentPath.startsWith('/about') ? 'text-primary' : 'text-foreground/80'}`}>
-            About
-          </a>
         </div>
       </div>
     </header>
-    
-    <!-- Search overlay (hidden by default) -->
-    <div id="search-overlay" class="fixed inset-0 z-50 hidden bg-background/80 backdrop-blur-sm">
-      <div class="container mx-auto px-4 h-full flex items-center justify-center">
-        <div class="w-full max-w-2xl bg-background border border-divider rounded-xl shadow-2xl p-6 transform transition-all scale-95 opacity-0" id="search-container">
-          <div class="flex items-center justify-between mb-4">
-            <h2 class="text-xl font-bold">Search Games</h2>
-            <button id="close-search" class="rounded-full p-1 text-foreground/80 hover:bg-foreground/10 transition-colors">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
-              </svg>
-            </button>
-          </div>
-          <div class="relative">
-            <input 
-              type="text" 
-              id="search-input" 
-              placeholder="Search for games..." 
-              class="w-full px-4 py-3 rounded-lg bg-content1 border-none focus:outline-none focus:ring-2 focus:ring-primary"
-            />
-            <div class="absolute right-3 top-3 text-foreground/60">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
-              </svg>
-            </div>
-          </div>
-          <div class="mt-6 max-h-[60vh] overflow-y-auto" id="search-results">
-            <!-- Search results will be populated here -->
-            <div class="text-center text-foreground/60 py-8">
-              Start typing to search...
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
     
     <!-- Main content -->
     <main id="main-content" class="flex-1">
@@ -165,7 +121,7 @@ const currentPath = Astro.url.pathname;
               <span class="font-bold text-foreground">GameVault</span>
             </div>
             <p class="text-sm text-foreground/70 mb-4">
-              Your ultimate destination for game downloads. Discover, download, and play the latest games.
+              你下载游戏的最终目的地。发现、下载和玩最新的游戏。
             </p>
             <div class="flex space-x-4">
               <a href="#" class="text-foreground/70 hover:text-primary transition-colors">

@@ -13,16 +13,14 @@ import {
   BreadcrumbItem,
   Divider,
   Tooltip,
-  Progress,
   Switch,
   Skeleton,
   Avatar,
-  Badge,
   Input
 } from "@heroui/react";
 import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
 import type { CollectionEntry } from "astro:content";
-import { formatDate } from "../utils/dateUtils";
+import TwikooComments from "../components/TwikooComments";
 
 // Icons
 const DownloadIcon = () => (
@@ -266,7 +264,7 @@ export const GameDetailPage: React.FC<GameDetailPageProps> = ({ game }) => {
                 as="a"
                 href="#download-section"
               >
-                Download Now
+                立即下载
               </Button>
               
               <Button
@@ -295,7 +293,7 @@ export const GameDetailPage: React.FC<GameDetailPageProps> = ({ game }) => {
       {/* Breadcrumbs navigation */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
         <Breadcrumbs size="sm" className="text-foreground-500">
-          <BreadcrumbItem href="/">Games</BreadcrumbItem>
+          <BreadcrumbItem href="/">游戏</BreadcrumbItem>
           {data.genres && data.genres[0] && (
             <BreadcrumbItem href={`/genres/${data.genres[0].toLowerCase().replace(/\s+/g, '-')}`}>
               {data.genres[0]}
@@ -361,7 +359,7 @@ export const GameDetailPage: React.FC<GameDetailPageProps> = ({ game }) => {
                           <Skeleton isLoaded={!isLoading} className="rounded-lg h-8">
                             <div className="flex items-center gap-2">
                               <CalendarIcon />
-                              <span className="font-medium">Release Date:</span>
+                              <span className="font-medium">上映日期(待定):</span>
                               <span className="text-foreground-500">{data.releaseDate}</span>
                             </div>
                           </Skeleton>
@@ -369,7 +367,7 @@ export const GameDetailPage: React.FC<GameDetailPageProps> = ({ game }) => {
                           <Skeleton isLoaded={!isLoading} className="rounded-lg h-8">
                             <div className="flex items-center gap-2">
                               <CodeIcon />
-                              <span className="font-medium">Developer:</span>
+                              <span className="font-medium">开发人员:</span>
                               <span className="text-foreground-500">{data.developer}</span>
                             </div>
                           </Skeleton>
@@ -378,7 +376,7 @@ export const GameDetailPage: React.FC<GameDetailPageProps> = ({ game }) => {
                             <Skeleton isLoaded={!isLoading} className="rounded-lg h-8">
                               <div className="flex items-center gap-2">
                                 <DownloadIcon />
-                                <span className="font-medium">File Size:</span>
+                                <span className="font-medium">文件大小:</span>
                                 <span className="text-foreground-500">{data.fileSize}</span>
                               </div>
                             </Skeleton>
@@ -393,7 +391,7 @@ export const GameDetailPage: React.FC<GameDetailPageProps> = ({ game }) => {
                             {data.description && (
                               <div dangerouslySetInnerHTML={{ __html: data.description }} />
                             )}
-                            {body && <div className="mt-4">{body}</div>}
+                            {body && <div className="mt-4" dangerouslySetInnerHTML={{ __html: body }}></div>}
                           </div>
                         </Skeleton>
                         
@@ -403,7 +401,7 @@ export const GameDetailPage: React.FC<GameDetailPageProps> = ({ game }) => {
                             <Skeleton isLoaded={!isLoading} className="rounded-lg">
                               <div className="flex items-center mb-3">
                                 <TagIcon />
-                                <h3 className="ml-2 text-lg font-semibold">Tags</h3>
+                                <h3 className="ml-2 text-lg font-semibold">标签</h3>
                                 
                                 {data.tags.length > 5 && (
                                   <Button 
@@ -454,7 +452,7 @@ export const GameDetailPage: React.FC<GameDetailPageProps> = ({ game }) => {
                       <Divider className="my-6" />
                       <h2 className="text-2xl font-bold mb-4 flex items-center">
                         <DownloadIcon />
-                        <span className="ml-2">Download Options</span>
+                        <span className="ml-2">下载选项</span>
                       </h2>
                       
                       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -493,8 +491,8 @@ export const GameDetailPage: React.FC<GameDetailPageProps> = ({ game }) => {
                                       <path fillRule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clipRule="evenodd" />
                                     </svg>
                                   </div>
-                                  <div className="text-lg font-bold">Download Torrent</div>
-                                  <div className="text-xs mt-1 opacity-80">Direct torrent download</div>
+                                  <div className="text-lg font-bold">下载种子</div>
+                                  <div className="text-xs mt-1 opacity-80">直接下载torrent</div>
                                 </div>
                               </CardBody>
                             </Card>
@@ -507,7 +505,7 @@ export const GameDetailPage: React.FC<GameDetailPageProps> = ({ game }) => {
                     {data.controllerSupport && (
                       <div className="mt-10">
                         <Divider className="my-6" />
-                        <h2 className="text-2xl font-bold mb-4">Controller Support</h2>
+                        <h2 className="text-2xl font-bold mb-4">控制器支持</h2>
                         
                         <Skeleton isLoaded={!isLoading} className="rounded-xl">
                           <Card className="bg-content1/50 backdrop-blur-md">
@@ -647,9 +645,9 @@ export const GameDetailPage: React.FC<GameDetailPageProps> = ({ game }) => {
                     ) : (
                       <div className="flex flex-col items-center justify-center py-12 text-center">
                         <div className="text-5xl mb-4">📷</div>
-                        <h3 className="text-xl font-bold mb-2">No screenshots available</h3>
+                        <h3 className="text-xl font-bold mb-2">没有屏幕截图</h3>
                         <p className="text-foreground/60 max-w-md">
-                          There are no screenshots available for this game yet.
+                          目前还没有这个游戏的截图。
                         </p>
                       </div>
                     )}
@@ -711,10 +709,10 @@ export const GameDetailPage: React.FC<GameDetailPageProps> = ({ game }) => {
                           
                           <CardFooter className="justify-between">
                             <div className="text-sm text-white/70">
-                              Video {activeVideoIndex + 1} of {data.videos.length}
+                              视频 {activeVideoIndex + 1} of {data.videos.length}
                             </div>
                             <div className="flex items-center">
-                              <span className="text-sm text-white/70 mr-2">Autoplay</span>
+                              <span className="text-sm text-white/70 mr-2">自动播放</span>
                               <Switch
                                 size="sm"
                                 color="primary"
@@ -728,9 +726,9 @@ export const GameDetailPage: React.FC<GameDetailPageProps> = ({ game }) => {
                     ) : (
                       <div className="flex flex-col items-center justify-center py-12 text-center">
                         <div className="text-5xl mb-4">🎬</div>
-                        <h3 className="text-xl font-bold mb-2">No videos available</h3>
+                        <h3 className="text-xl font-bold mb-2">没有视频</h3>
                         <p className="text-foreground/60 max-w-md">
-                          There are no videos available for this game yet.
+                          目前还没有这个游戏的视频。
                         </p>
                       </div>
                     )}
@@ -745,7 +743,7 @@ export const GameDetailPage: React.FC<GameDetailPageProps> = ({ game }) => {
                           <Skeleton isLoaded={!isLoading} className="rounded-xl h-full">
                             <Card className="h-full bg-content1/50 backdrop-blur-md">
                               <CardHeader>
-                                <h3 className="text-xl font-bold">Minimum Requirements</h3>
+                                <h3 className="text-xl font-bold">最低要求</h3>
                               </CardHeader>
                               <CardBody>
                                 <ul className="space-y-3">
@@ -765,7 +763,7 @@ export const GameDetailPage: React.FC<GameDetailPageProps> = ({ game }) => {
                           <Skeleton isLoaded={!isLoading} className="rounded-xl h-full">
                             <Card className="h-full bg-content1/50 backdrop-blur-md">
                               <CardHeader>
-                                <h3 className="text-xl font-bold">Recommended Requirements</h3>
+                                <h3 className="text-xl font-bold">推荐要求</h3>
                               </CardHeader>
                               <CardBody>
                                 <ul className="space-y-3">
@@ -784,9 +782,9 @@ export const GameDetailPage: React.FC<GameDetailPageProps> = ({ game }) => {
                     ) : (
                       <div className="flex flex-col items-center justify-center py-12 text-center">
                         <div className="text-5xl mb-4">💻</div>
-                        <h3 className="text-xl font-bold mb-2">System requirements not specified</h3>
+                        <h3 className="text-xl font-bold mb-2">未指定系统要求</h3>
                         <p className="text-foreground/60 max-w-md">
-                          The system requirements for this game have not been specified.
+                          这个游戏的系统要求没有被指定。
                         </p>
                       </div>
                     )}
@@ -795,7 +793,7 @@ export const GameDetailPage: React.FC<GameDetailPageProps> = ({ game }) => {
                     {data.languages && (
                       <div className="mt-8">
                         <Divider className="my-6" />
-                        <h3 className="text-xl font-bold mb-4">Languages</h3>
+                        <h3 className="text-xl font-bold mb-4">语言</h3>
                         
                         <Skeleton isLoaded={!isLoading} className="rounded-xl">
                           <Card className="bg-content1/50 backdrop-blur-md">
@@ -803,7 +801,7 @@ export const GameDetailPage: React.FC<GameDetailPageProps> = ({ game }) => {
                               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 {data.languages.interface && (
                                   <div>
-                                    <h4 className="text-lg font-medium mb-2">Interface</h4>
+                                    <h4 className="text-lg font-medium mb-2">接口</h4>
                                     <div className="flex flex-wrap gap-2">
                                       {data.languages.interface.map((lang, index) => (
                                         <Chip key={index} variant="flat" size="sm">{lang}</Chip>
@@ -814,7 +812,7 @@ export const GameDetailPage: React.FC<GameDetailPageProps> = ({ game }) => {
                                 
                                 {data.languages.audio && (
                                   <div>
-                                    <h4 className="text-lg font-medium mb-2">Audio</h4>
+                                    <h4 className="text-lg font-medium mb-2">音频</h4>
                                     <div className="flex flex-wrap gap-2">
                                       {data.languages.audio.map((lang, index) => (
                                         <Chip key={index} variant="flat" size="sm">{lang}</Chip>
@@ -835,23 +833,7 @@ export const GameDetailPage: React.FC<GameDetailPageProps> = ({ game }) => {
           </CardBody>
           
           <CardFooter className="flex flex-col items-start gap-2 px-6 pb-6">
-            {data.updatedDate && (
-              <div className="text-sm text-foreground/60">
-                Last updated: {formatDate(data.updatedDate)}
-              </div>
-            )}
-            
-            <div className="flex items-center gap-2">
-              <Avatar
-                src="https://i.pravatar.cc/150?img=3"
-                size="sm"
-                className="border-2 border-white"
-              />
-              <div className="text-sm">
-                <span className="text-foreground/60">Published by </span>
-                <span className="font-medium">Admin</span>
-              </div>
-            </div>
+            <TwikooComments envId="https://superlative-valkyrie-233b02.netlify.app/.netlify/functions/twikoo" />
           </CardFooter>
         </Card>
       </div>
@@ -871,7 +853,7 @@ export const GameDetailPage: React.FC<GameDetailPageProps> = ({ game }) => {
               onClick={(e) => e.stopPropagation()}
             >
               <CardHeader className="flex justify-between">
-                <h3 className="text-xl font-bold">Share This Game</h3>
+                <h3 className="text-xl font-bold">分享这个游戏</h3>
                 <Button isIconOnly variant="light" onClick={toggleShareOptions}>
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                     <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
@@ -907,7 +889,7 @@ export const GameDetailPage: React.FC<GameDetailPageProps> = ({ game }) => {
                 </div>
                 
                 <div className="mt-4">
-                  <p className="text-sm mb-2">Or copy link:</p>
+                  <p className="text-sm mb-2">或复制链接：</p>
                   <div className="flex">
                     <Input
                       value={`https://yourgamesite.com/games/${game.slug}`}

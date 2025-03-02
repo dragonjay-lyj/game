@@ -181,7 +181,7 @@ export const GameGrid: React.FC<GameGridProps> = ({
                     </Chip>
                   )}
                 >
-                  Genres
+                  类型
                 </Button>
               </DropdownTrigger>
               <DropdownMenu 
@@ -201,17 +201,16 @@ export const GameGrid: React.FC<GameGridProps> = ({
             <Dropdown>
               <DropdownTrigger>
                 <Button variant="flat" startContent={<SortIcon />}>
-                  Sort By
+                  排序
                 </Button>
               </DropdownTrigger>
               <DropdownMenu 
                 aria-label="Sort Options"
                 onAction={(key) => setSortOption(key as SortOption)}
               >
-                <DropdownItem key="newest" description="Latest releases first">Newest First</DropdownItem>
-                <DropdownItem key="oldest" description="Oldest releases first">Oldest First</DropdownItem>
-                <DropdownItem key="alphabetical" description="A to Z">Alphabetical</DropdownItem>
-                <DropdownItem key="rating" description="Highest rated first">Rating</DropdownItem>
+                <DropdownItem key="newest" description="Latest releases first">最新的第一</DropdownItem>
+                <DropdownItem key="oldest" description="Oldest releases first">古老的第一</DropdownItem>
+                <DropdownItem key="alphabetical" description="A to Z">字母顺序排列</DropdownItem>
               </DropdownMenu>
             </Dropdown>
           </div>
@@ -272,7 +271,7 @@ export const GameGrid: React.FC<GameGridProps> = ({
                   onClick={() => setSelectedGenres([])}
                   className="text-xs h-6 px-2"
                 >
-                  Clear All
+                  清除所有
                 </Button>
               )}
             </div>
@@ -280,7 +279,7 @@ export const GameGrid: React.FC<GameGridProps> = ({
         </div>
         
         <div>
-          Sorted by: <span className="font-medium text-foreground/80">{getSortLabel(sortOption)}</span>
+        按: <span className="font-medium text-foreground/80">{getSortLabel(sortOption)}</span>
         </div>
       </div>
       
@@ -323,9 +322,9 @@ export const GameGrid: React.FC<GameGridProps> = ({
               className="flex flex-col items-center justify-center py-16 text-center"
             >
               <div className="text-5xl mb-4">🎮</div>
-              <h3 className="text-xl font-bold mb-2">No games found</h3>
+              <h3 className="text-xl font-bold mb-2">没有找到游戏</h3>
               <p className="text-foreground/60 max-w-md">
-                We couldn't find any games matching your current filters. Try adjusting your search or filters.
+              我们找不到任何符合你当前过滤器的游戏。试着调整你的搜索或过滤器。
               </p>
               <Button 
                 color="primary" 
@@ -338,7 +337,7 @@ export const GameGrid: React.FC<GameGridProps> = ({
                   setSortOption("newest");
                 }}
               >
-                Reset All Filters
+                重置所有过滤器
               </Button>
             </motion.div>
           )}
